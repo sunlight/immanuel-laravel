@@ -1,0 +1,41 @@
+{
+    "name": "sunlight/immanuel-laravel",
+    "description": "Laravel facade for easy integration with the Immanuel astrology API.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Robert Davies",
+            "email": "rob@sunlightdigital.net"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Sunlight\\Immanuel\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sunlight\\Immanuel\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sunlight\\Immanuel\\ImmanuelServiceProvider"
+            ],
+            "aliases": {
+                "Immanuel": "Sunlight\\Immanuel\\Facades\\Immanuel"
+            }
+        }
+    },
+    "require": {
+        "php": "^7.4"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^5.4",
+        "phpunit/phpunit": "^9.3"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
