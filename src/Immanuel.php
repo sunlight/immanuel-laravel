@@ -2,6 +2,7 @@
 
 namespace Sunlight\Immanuel;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -23,6 +24,16 @@ class Immanuel
         $this->apiKey = config('immanuel.api_key');
         $this->apiSecret = config('immanuel.api_secret');
         $this->apiUrl = config('immanuel.api_url');
+
+        $this->options = [
+            'latitude'=> null,
+            'longitude'=> null,
+            'birth_date'=> null,
+            'birth_time'=> null,
+            'house_system'=> null,
+            'solar_return_year'=> null,
+            'progression_date'=> null,
+        ];
     }
 
     /**
@@ -44,7 +55,7 @@ class Immanuel
      */
     public function __set($key, $value) : void
     {
-        if (isset($this->options[$key])) {
+        if (Arr::has($this->options, $key)) {
             $this->options[$key] = $value;
         }
     }
@@ -55,16 +66,8 @@ class Immanuel
      */
     public function create(array $options)
     {
-        $this->options = array_replace([
-            'latitude' => '',
-            'longitude' => '',
-            'birth_date' => '',
-            'birth_time' => '',
-            'house_system' => '',
-            'solar_return_year' => '',
-            'progression_date' => '',
-        ], $options);
-
+        $options = Arr::only($options, array_keys($this->options));
+        $this->options = array_replace($this->options, $options);
         return $this;
     }
 
@@ -72,19 +75,19 @@ class Immanuel
      * Methods for various supported chart types.
      *
      */
-    public function natalChart($options = [])
+    public function natalChart($options = null)
     {
         $this->getChart($options, 'natal');
         return $this;
     }
 
-    public function solarReturnChart($options = [])
+    public function solarReturnChart($options = null)
     {
         $this->getChart($options, 'solar');
         return $this;
     }
 
-    public function progressedChart($options = [])
+    public function progressedChart($options = null)
     {
         $this->getChart($options, 'progressed');
         return $this;
@@ -115,8 +118,14 @@ class Immanuel
      */
     protected function getChart($options, $type)
     {
+        $options = $options ?? $this->options;
+
+        if (empty($options)) {
+            return;
+        }
+
         $endpointUrl = Str::of($this->apiUrl)->finish('/').'chart/'.$type;
-        $this->response = Http::withBasicAuth($this->apiKey, $this->apiSecret)->post($endpointUrl, $this->options ?? $options);
+        $this->response = Http::withBasicAuth($this->apiKey, $this->apiSecret)->post($endpointUrl, $options);
         $this->chartData = $this->response->ok() ? collect($this->response->json()) : null;
     }
 }

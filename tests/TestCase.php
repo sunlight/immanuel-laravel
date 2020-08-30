@@ -2,6 +2,7 @@
 
 namespace Sunlight\Immanuel\Tests;
 
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Sunlight\Immanuel\ImmanuelServiceProvider;
 
@@ -28,5 +29,14 @@ class TestCase extends \Orchestra\Testbench\TestCase
         return [
             ImmanuelServiceProvider::class,
         ];
+    }
+
+    protected function checkRequestAgainstBasicOptions(Request $request)
+    {
+        return $request['latitude'] == $this->options['latitude'] &&
+               $request['longitude'] == $this->options['longitude'] &&
+               $request['birth_date'] == $this->options['birth_date'] &&
+               $request['birth_time'] == $this->options['birth_time'] &&
+               $request['house_system'] == $this->options['house_system'];
     }
 }
