@@ -34,7 +34,8 @@
     },
     "require-dev": {
         "orchestra/testbench": "^5.4",
-        "phpunit/phpunit": "^9.3"
+        "phpunit/phpunit": "^9.3",
+        "guzzlehttp/guzzle": "^7.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
