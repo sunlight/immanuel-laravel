@@ -12,9 +12,11 @@ class Immanuel
     protected $apiUrl;
     protected $options;
     protected $chartData;
+    protected $response;
 
     /**
      * Set API details on instantiation.
+     *
      */
     public function __construct()
     {
@@ -56,9 +58,9 @@ class Immanuel
         $this->options = array_replace([
             'latitude' => '',
             'longitude' => '',
-            'birthDate' => '',
-            'birthTime' => '',
-            'houseSystem' => '',
+            'birth_date' => '',
+            'birth_time' => '',
+            'house_system' => '',
             'solar_return_year' => '',
             'progression_date' => '',
         ], $options);
@@ -67,7 +69,7 @@ class Immanuel
     }
 
     /**
-     * Methods for talking to the API.
+     * Methods for various supported chart types.
      *
      */
     public function natalChart()
@@ -88,23 +90,33 @@ class Immanuel
         return $this;
     }
 
+    /**
+     * Return chart data.
+     *
+     */
     public function get()
     {
-        if (!is_null($this->chartData)) {
-            return collect($this->chartData);
-        }
-
-        return null;
+        return $this->chartData;
     }
 
     /**
-     * Here's where the API magic happens.
+     * Preserve Laravel's HTTP Response object.
+     *
+     */
+    public function response()
+    {
+        return $this->response;
+    }
+
+    /**
+     * Here's where the API magic happens via Laravel's Http facade.
+     * Upon success, the API's JSON response is stored as a standard Laravel collection.
      *
      */
     protected function getChart($type)
     {
         $endpointUrl = Str::of($this->apiUrl)->finish('/').'chart/'.$type;
-        $response = Http::withBasicAuth($this->apiKey, $this->apiSecret)->post($endpointUrl, $this->options);
-        $this->chartData = $response->ok() ? $response->json() : null;
+        $this->response = Http::withBasicAuth($this->apiKey, $this->apiSecret)->post($endpointUrl, $this->options);
+        $this->chartData = $this->response->ok() ? collect($this->response->json()) : null;
     }
 }
