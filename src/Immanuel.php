@@ -72,21 +72,21 @@ class Immanuel
      * Methods for various supported chart types.
      *
      */
-    public function natalChart()
+    public function natalChart($options = [])
     {
-        $this->getChart('natal');
+        $this->getChart($options, 'natal');
         return $this;
     }
 
-    public function solarReturnChart()
+    public function solarReturnChart($options = [])
     {
-        $this->getChart('solar');
+        $this->getChart($options, 'solar');
         return $this;
     }
 
-    public function progressedChart()
+    public function progressedChart($options = [])
     {
-        $this->getChart('progressed');
+        $this->getChart($options, 'progressed');
         return $this;
     }
 
@@ -113,10 +113,10 @@ class Immanuel
      * Upon success, the API's JSON response is stored as a standard Laravel collection.
      *
      */
-    protected function getChart($type)
+    protected function getChart($options, $type)
     {
         $endpointUrl = Str::of($this->apiUrl)->finish('/').'chart/'.$type;
-        $this->response = Http::withBasicAuth($this->apiKey, $this->apiSecret)->post($endpointUrl, $this->options);
+        $this->response = Http::withBasicAuth($this->apiKey, $this->apiSecret)->post($endpointUrl, $this->options ?? $options);
         $this->chartData = $this->response->ok() ? collect($this->response->json()) : null;
     }
 }
