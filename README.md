@@ -5,7 +5,7 @@
 ## Installation
 
 ```bash
-composer require sunlight/immanuel-laravel
+composer require theriftlab/immanuel-laravel
 ```
 
 ## Config
@@ -19,7 +19,7 @@ By default, the Immanuel package reads the following keys from your `.env` file:
 If you need to store any extra data related to this package, or store any of the above details directly in your application, you can publish the config file using the following:
 
 ```bash
-php artisan vendor:publish --provider="Sunlight\Immanuel\ImmanuelServiceProvider" --tag="config"
+php artisan vendor:publish --provider="RiftLab\Immanuel\ImmanuelServiceProvider" --tag="config"
 ```
 
 This will give you the `config/immanuel.php` file with the above three settings added in by default.
@@ -36,7 +36,7 @@ This will give you the `config/immanuel.php` file with the above three settings 
 ### Example
 
 ```php
-use Sunlight\Immanuel\Facades\Immanuel;
+use RiftLab\Immanuel\Facades\Immanuel;
 
 ...
 

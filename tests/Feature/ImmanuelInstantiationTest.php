@@ -1,13 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Http;
-use Sunlight\Immanuel\Tests\TestCase;
+use RiftLab\Immanuel\Tests\TestCase;
 
 class ImmanuelInstantiationTest extends TestCase
 {
     public function testTraditionalInstantiation()
     {
-        $immanuel = new Sunlight\Immanuel\Immanuel();
+        $immanuel = new RiftLab\Immanuel\Immanuel();
         $immanuel->create($this->options)->natalChart();
 
         Http::assertSent(function ($request) {
@@ -19,7 +19,7 @@ class ImmanuelInstantiationTest extends TestCase
 
     public function testTraditionalInstantiationWithOptionProperties()
     {
-        $immanuel = new Sunlight\Immanuel\Immanuel();
+        $immanuel = new RiftLab\Immanuel\Immanuel();
 
         $immanuel->latitude = $this->options['latitude'];
         $immanuel->longitude = $this->options['longitude'];
@@ -38,7 +38,7 @@ class ImmanuelInstantiationTest extends TestCase
 
     public function testMethodOptionsDoNotAffectOptionsProperty()
     {
-        $immanuel = Sunlight\Immanuel\Facades\Immanuel::create($this->options);
+        $immanuel = RiftLab\Immanuel\Facades\Immanuel::create($this->options);
         $immanuel->latitude = '123456';
         $immanuel->natalChart($this->options);
 

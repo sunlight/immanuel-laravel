@@ -1,10 +1,10 @@
 <?php
 
-namespace Sunlight\Immanuel\Tests;
+namespace RiftLab\Immanuel\Tests;
 
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
-use Sunlight\Immanuel\ImmanuelServiceProvider;
+use RiftLab\Immanuel\ImmanuelServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {

@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Http;
-use Sunlight\Immanuel\Tests\TestCase;
-use Sunlight\Immanuel\Facades\Immanuel;
+use RiftLab\Immanuel\Tests\TestCase;
+use RiftLab\Immanuel\Facades\Immanuel;
 
 class ImmanuelMethodTest extends TestCase
 {

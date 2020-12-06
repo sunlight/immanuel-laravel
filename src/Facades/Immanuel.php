@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunlight\Immanuel\Facades;
+namespace RiftLab\Immanuel\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

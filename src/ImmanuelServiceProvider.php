@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunlight\Immanuel;
+namespace RiftLab\Immanuel;
 
 use Illuminate\Support\ServiceProvider;
 

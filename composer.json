@@ -1,31 +1,31 @@
 {
-    "name": "sunlight/immanuel-laravel",
+    "name": "theriftlab/immanuel-laravel",
     "description": "Laravel facade for easy integration with the Immanuel astrology API.",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Robert Davies",
-            "email": "rob@sunlightdigital.net"
+            "email": "robert@theriftlab.com"
         }
     ],
     "autoload": {
         "psr-4": {
-            "Sunlight\\Immanuel\\": "src"
+            "RiftLab\\Immanuel\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Sunlight\\Immanuel\\Tests\\": "tests"
+            "RiftLab\\Immanuel\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Sunlight\\Immanuel\\ImmanuelServiceProvider"
+                "RiftLab\\Immanuel\\ImmanuelServiceProvider"
             ],
             "aliases": {
-                "Immanuel": "Sunlight\\Immanuel\\Facades\\Immanuel"
+                "Immanuel": "RiftLab\\Immanuel\\Facades\\Immanuel"
             }
         }
     },
