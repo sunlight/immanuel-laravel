@@ -16,6 +16,12 @@ class TestCase extends \Orchestra\Testbench\TestCase
         'house_system' => 'Polich Page',
         'solar_return_year' => '2025',
         'progression_date' => '2020-07-01',
+        'synastry_date' => '2001-02-16',
+        'synastry_time' => '06:00',
+        'synastry_latitude' => '38.5616505',
+        'synastry_longitude' => '-121.5829968',
+        'transit_date' => '2021-07-01',
+        'transit_time' => '13:00',
     ];
 
     public function setUp(): void

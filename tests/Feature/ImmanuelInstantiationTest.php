@@ -8,7 +8,7 @@ class ImmanuelInstantiationTest extends TestCase
     public function testTraditionalInstantiation()
     {
         $immanuel = new RiftLab\Immanuel\Immanuel();
-        $immanuel->create($this->options)->natalChart();
+        $immanuel->create($this->options)->addNatalChart()->get();
 
         Http::assertSent(function ($request) {
             return $request->hasHeader('Authorization') &&
@@ -27,25 +27,12 @@ class ImmanuelInstantiationTest extends TestCase
         $immanuel->birth_time = $this->options['birth_time'];
         $immanuel->house_system = $this->options['house_system'];
 
-        $immanuel->natalChart();
+        $immanuel->addNatalChart()->get();
 
         Http::assertSent(function ($request) {
             return $request->hasHeader('Authorization') &&
                    $request->url() == config('immanuel.api_url').'/chart/natal' &&
                    $this->checkRequestAgainstBasicOptions($request);
         });
-    }
-
-    public function testMethodOptionsDoNotAffectOptionsProperty()
-    {
-        $immanuel = RiftLab\Immanuel\Facades\Immanuel::create($this->options);
-        $immanuel->latitude = '123456';
-        $immanuel->natalChart($this->options);
-
-        Http::assertSent(function ($request) {
-            return $request['latitude'] == $this->options['latitude'];
-        });
-
-        $this->assertEquals($immanuel->latitude, '123456');
     }
 }

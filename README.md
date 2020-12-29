@@ -26,19 +26,26 @@ This will give you the `config/immanuel.php` file with the above three settings 
 
 ## Usage
 
-* `create()` takes an array of birth data - date, time, location, house system, and optionally a solar return year or a progression date - and returns an instance of itself.
-* `natalChart()` requests natal chart data, either based on the array passed to `create()` or taking an identical array as an argument. The array passed directly to this method will not be stored in the object itself.
-* `solarChart()` requests solar return chart data based on the array passed to `create()` or to itself, as above.
-* `progressedChart()` requests progression chart data based on the array passed to `create()` or to itself, as above.
-* `get()` can be called after one of the chart methods to return a standard Laravel collection containing data for planets and points, including placements and aspects.
-* `response()` can be called after one of the chart methods to return Laravel's Http `Response` object.
+Check the [Immanuel API](https://github.com/theriftlab/immanuel-api/) README for more detailed usage, limitations, and a specific list of all available options that are POSTed to the API methods. Apart from `get()` and `response()`, the following methods all return `$this` to allow chaining.
+
+* `create()` takes an array of birth data, and any any other required or optional data for the following methods.
+* `addNatalChart()` adds a natal chart to the list of returned charts.
+* `addSolarReturnChart()` adds a solar return chart to the list of returned charts.
+* `addProgressedChart()` adds a progressed chart to the list of returned charts.
+* `addSynastryChart()` adds a synastry chart to the list of returned charts.
+* `addTransits()` adds a transit chart to the list of returned charts.
+* `aspectsToSolarReturn()` will ensure the first chart's aspects point to the second chart's planets, if the second chart is a solar return.
+* `aspectsToProgressed()` will ensure the first chart's aspects point to the second chart's planets, if the second chart is a progressed chart.
+* `aspectsToSynastry()` will ensure the first chart's aspects point to the second chart's planets, if the second chart is a synastry chart.
+* `aspectsToTransits()` will ensure the first chart's aspects point to the transit chart's planets, if transits were requested.
+* `get()` can be called after the above methods to query the API and return a standard Laravel collection containing the requested chart data.
+* `response()` can be called after `get()` to return Laravel's Http `Response` object.
 
 ### Example
 
 ```php
 use RiftLab\Immanuel\Facades\Immanuel;
 
-...
 
 // Basic natal chart
 $birthData = [
@@ -49,21 +56,11 @@ $birthData = [
     'house_system' => 'Polich Page',
 ];
 
-$natalChart = Immanuel::create($birthData)->natalChart();
+$chartData = Immanuel::create($birthData)->addNatalChart()->get();
+dd($chartData);
 
-if ($natalChart->response()->Ok()) {
-    // Options passed to create() get stored in the object
-    echo 'Your birth date is ' . $natalChart->birth_date;   // '2000-10-30'
-    dd($natalChart->get());
-}
-
-// Or...
-
-$natalChart = Immanuel::natalChart($birthData);
-
-if ($natalChart->response()->Ok()) {
-    // Options passed directly to chart methods won't get stored
-    echo 'Your birth date is ' . $natalChart->birth_date;   // null
-    dd($natalChart->get());
-}
+// Check response
+$transitChart = Immanuel::create($birthData)->addNatalChart()->addTransits()->aspectsToTransits();
+$chartData = $transitChart->get();
+dd($transitChart->response());
 ```
