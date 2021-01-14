@@ -253,6 +253,7 @@ class Immanuel
      */
     protected function getChartData(array $postData)
     {
+        $postData = array_filter($postData);
         $endpointUrl = Str::of($this->apiUrl)->finish('/').'chart/'.implode('/', $this->chartMethods);
         $this->response = Http::withBasicAuth($this->apiKey, $this->apiSecret)->post($endpointUrl, $postData);
         $this->chartData = $this->response->ok() ? collect($this->response->json()) : null;
