@@ -32,11 +32,10 @@
     "require": {
         "php": "^7.4"
     },
-    "require-dev": {
-        "orchestra/testbench": "^5.4",
-        "phpunit/phpunit": "^9.3",
-        "guzzlehttp/guzzle": "^7.0"
-    },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "require-dev": {
+        "orchestra/testbench": "^6.7",
+        "guzzlehttp/guzzle": "^7.2"
+    }
 }
