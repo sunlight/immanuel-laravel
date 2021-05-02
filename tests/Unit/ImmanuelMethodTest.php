@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Testing in this file is a bit half-assed since we only rally need
+ * Testing in this file is a bit half-assed since we only really need
  * to test the correct data is being sent off, and that some of the
  * exceptions are thrown when expected. Most of the chaining logic is
  * taken from immanuel-chart and tests of the actual data returned are
@@ -20,7 +20,8 @@ class ImmanuelMethodTest extends TestCase
 
         Http::assertSent(function ($request) {
             return $request->hasHeader('Authorization') &&
-                   $request->url() == config('immanuel.api_url').'/chart/natal' &&
+                   $request->header('Authorization')[0] == 'Bearer '.$this->apiToken &&
+                   $request->url() == $this->apiUrl.'/chart/natal' &&
                    $this->checkRequestAgainstBasicOptions($request);
         });
     }
@@ -31,7 +32,8 @@ class ImmanuelMethodTest extends TestCase
 
         Http::assertSent(function ($request) {
             return $request->hasHeader('Authorization') &&
-                   $request->url() == config('immanuel.api_url').'/chart/solar' &&
+                   $request->header('Authorization')[0] == 'Bearer '.$this->apiToken &&
+                   $request->url() == $this->apiUrl.'/chart/solar' &&
                    $this->checkRequestAgainstBasicOptions($request) &&
                    $request['solar_return_year'] == $this->options['solar_return_year'];
         });
@@ -43,7 +45,8 @@ class ImmanuelMethodTest extends TestCase
 
         Http::assertSent(function ($request) {
             return $request->hasHeader('Authorization') &&
-                   $request->url() == config('immanuel.api_url').'/chart/progressed' &&
+                   $request->header('Authorization')[0] == 'Bearer '.$this->apiToken &&
+                   $request->url() == $this->apiUrl.'/chart/progressed' &&
                    $this->checkRequestAgainstBasicOptions($request) &&
                    $request['progression_date'] == $this->options['progression_date'];
         });
@@ -55,7 +58,8 @@ class ImmanuelMethodTest extends TestCase
 
         Http::assertSent(function ($request) {
             return $request->hasHeader('Authorization') &&
-                   $request->url() == config('immanuel.api_url').'/chart/natal/transits' &&
+                   $request->header('Authorization')[0] == 'Bearer '.$this->apiToken &&
+                   $request->url() == $this->apiUrl.'/chart/natal/transits' &&
                    $this->checkRequestAgainstBasicOptions($request) &&
                    $request['transit_date'] === $this->options['transit_date'];
         });
@@ -67,7 +71,8 @@ class ImmanuelMethodTest extends TestCase
 
         Http::assertSent(function ($request) {
             return $request->hasHeader('Authorization') &&
-                   $request->url() == config('immanuel.api_url').'/chart/natal/transits' &&
+                   $request->header('Authorization')[0] == 'Bearer '.$this->apiToken &&
+                   $request->url() == $this->apiUrl.'/chart/natal/transits' &&
                    $this->checkRequestAgainstBasicOptions($request) &&
                    $request['aspects'] === 'transits';
         });
@@ -87,8 +92,9 @@ class ImmanuelMethodTest extends TestCase
 
     public function testSetter()
     {
+        $newLatitude = strrev($this->options['latitude']);
         $immanuel = Immanuel::create($this->options);
-        $immanuel->latitude = '123456';
-        $this->assertEquals($immanuel->latitude, '123456');
+        $immanuel->latitude = $newLatitude;
+        $this->assertEquals($immanuel->latitude, $newLatitude);
     }
 }

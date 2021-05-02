@@ -8,6 +8,9 @@ use RiftLab\Immanuel\ImmanuelServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
+    protected $apiUrl = 'https://api.immanuel.app';
+    protected $apiToken = 'IMMANUEL-TOKEN';
+
     protected $options = [
         'latitude' => '38.5616505',
         'longitude' => '-121.5829968',
@@ -28,6 +31,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
     {
         parent::setUp();
         Http::fake();
+        config()->set('immanuel.api_token', $this->apiToken);
     }
 
     protected function getPackageProviders($app)

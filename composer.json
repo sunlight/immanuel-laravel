@@ -5,8 +5,8 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Robert Davies",
-            "email": "robert@theriftlab.com"
+            "name": "The Rift Lab",
+            "email": "scene@theriftlab.com"
         }
     ],
     "autoload": {

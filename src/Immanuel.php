@@ -8,9 +8,8 @@ use Illuminate\Support\Str;
 
 class Immanuel
 {
-    protected $apiKey;
-    protected $apiSecret;
     protected $apiUrl;
+    protected $apiToken;
     protected $chartMethods;
     protected $options;
     protected $arguments;
@@ -23,9 +22,8 @@ class Immanuel
      */
     public function __construct()
     {
-        $this->apiKey = config('immanuel.api_key');
-        $this->apiSecret = config('immanuel.api_secret');
         $this->apiUrl = config('immanuel.api_url');
+        $this->apiToken = config('immanuel.api_token');
         $this->chartMethods = [];
         $this->arguments = [];
 
@@ -255,7 +253,7 @@ class Immanuel
     {
         $postData = array_filter($postData);
         $endpointUrl = Str::of($this->apiUrl)->finish('/').'chart/'.implode('/', $this->chartMethods);
-        $this->response = Http::withBasicAuth($this->apiKey, $this->apiSecret)->post($endpointUrl, $postData);
+        $this->response = Http::withToken($this->apiToken)->post($endpointUrl, $postData);
         $this->chartData = $this->response->ok() ? collect($this->response->json()) : null;
     }
 }
