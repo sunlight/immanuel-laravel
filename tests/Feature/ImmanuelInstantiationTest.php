@@ -12,6 +12,7 @@ class ImmanuelInstantiationTest extends TestCase
 
         Http::assertSent(function ($request) {
             return $request->hasHeader('Authorization') &&
+                   $request->header('Authorization')[0] == 'Bearer '.$this->apiToken &&
                    $request->url() == config('immanuel.api_url').'/chart/natal' &&
                    $this->checkRequestAgainstBasicOptions($request);
         });
@@ -31,6 +32,7 @@ class ImmanuelInstantiationTest extends TestCase
 
         Http::assertSent(function ($request) {
             return $request->hasHeader('Authorization') &&
+                   $request->header('Authorization')[0] == 'Bearer '.$this->apiToken &&
                    $request->url() == config('immanuel.api_url').'/chart/natal' &&
                    $this->checkRequestAgainstBasicOptions($request);
         });

@@ -3,6 +3,7 @@
 namespace RiftLab\Immanuel;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -251,9 +252,24 @@ class Immanuel
      */
     protected function getChartData(array $postData)
     {
+        // Get URL & data
         $postData = array_filter($postData);
         $endpointUrl = Str::of($this->apiUrl)->finish('/').'chart/'.implode('/', $this->chartMethods);
-        $this->response = Http::withToken($this->apiToken)->post($endpointUrl, $postData);
-        $this->chartData = $this->response->ok() ? collect($this->response->json()) : null;
+
+        // Generate cache key unique to URL & data
+        ksort($postData);
+        $cacheKey = base64_encode(json_encode($postData).$endpointUrl);
+
+        // If it exists already, return it
+        if (Cache::has($cacheKey)) {
+            $this->response = null;
+            $this->chartData = Cache::get($cacheKey);
+        }
+        // Otherwise, store it
+        else {
+            $this->response = Http::withToken($this->apiToken)->post($endpointUrl, $postData);
+            $this->chartData = $this->response->ok() ? collect($this->response->json()) : null;
+            Cache::put($cacheKey, $this->chartData, config('immanuel.cache_lifetime'));
+        }
     }
 }
