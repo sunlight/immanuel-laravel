@@ -1,6 +1,6 @@
 # Immanuel
 
-[Immanuel](https://immanuel.app/) is an astrology API that allows signed-up users to make requests for natal, solar return, and progressed chart data. This package provides a Laravel facade to wrap requests into simple methods that are easy to use in any Laravel application.
+[Immanuel](https://immanuel.app/) is an astrology API that allows signed-up users to make requests for natal, solar return, progressed, transit, and synastry chart data. This package provides a Laravel facade to wrap requests into simple methods that are easy to use in any Laravel application, and adds caching to save on repeat requests.
 
 ## Installation
 
@@ -12,9 +12,9 @@ composer require theriftlab/immanuel-laravel
 
 By default, the Immanuel package reads the following keys from your `.env` file:
 
-* `API_KEY`: the API key you received when signing up at https://immanuel.app/
-* `API_SECRET`: the API secret you received.
-* `API_URL`: the URL of the API, defaulting to `https://api.immanuel.app` - you should only need to change this if you host your own version of the project.
+* `IMMANUEL_API_URL`: the URL of the API, defaulting to `https://api.immanuel.app` - you should only need to change this if you're hosting your own version of the project.
+* `IMMANUEL_API_TOKEN`: the API token you received when signing up at https://immanuel.app/
+* `IMMANUEL_CACHE_LIFETIME`: the length of time in seconds that the requested chart data will be cached, defaulting to 180 days. Identical requests will always produce identical results, but the cache length should not be indefinite in the event of updates to the API itself.
 
 If you need to store any extra data related to this package, or store any of the above details directly in your application, you can publish the config file using the following:
 
@@ -26,7 +26,7 @@ This will give you the `config/immanuel.php` file with the above three settings 
 
 ## Usage
 
-Check the [Immanuel API](https://github.com/theriftlab/immanuel-api/) README for more detailed usage, limitations, and a specific list of all available options that are POSTed to the API methods. Apart from `get()` and `response()`, the following methods all return `$this` to allow chaining.
+Apart from `get()` and `response()`, the following methods all return `$this` to allow chaining.
 
 * `create()` takes an array of birth data, and any any other required or optional data for the following methods.
 * `addNatalChart()` adds a natal chart to the list of returned charts.
@@ -39,7 +39,8 @@ Check the [Immanuel API](https://github.com/theriftlab/immanuel-api/) README for
 * `aspectsToSynastry()` will ensure the first chart's aspects point to the second chart's planets, if the second chart is a synastry chart.
 * `aspectsToTransits()` will ensure the first chart's aspects point to the transit chart's planets, if transits were requested.
 * `get()` can be called after the above methods to query the API and return a standard Laravel collection containing the requested chart data.
-* `response()` can be called after `get()` to return Laravel's Http `Response` object.
+* `response()` can be called after `get()` to return Laravel's HTTP `Response` object. Note: This will be `NULL` if cached data is returned.
+* `cached()` can be called after `get()` and will return either `TRUE` or `FALSE` depending on whether or not the last request returned cached data.
 
 ### Example
 

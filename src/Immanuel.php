@@ -16,6 +16,7 @@ class Immanuel
     protected $arguments;
     protected $chartData;
     protected $response;
+    protected $cached;
 
     /**
      * Set API details on instantiation.
@@ -225,6 +226,15 @@ class Immanuel
     }
 
     /**
+     * Indicate whether or not the returned chart data is cached.
+     *
+     */
+    public function cached()
+    {
+        return $this->cached ?? false;
+    }
+
+    /**
      * Add a chart to the arguments - either as a primary if one doesn't exist,
      * or as a secondary if a primary does already exist.
      *
@@ -260,16 +270,20 @@ class Immanuel
         ksort($postData);
         $cacheKey = base64_encode(json_encode($postData).$endpointUrl);
 
-        // If it exists already, return it
         if (Cache::has($cacheKey)) {
+            // If it exists already, return it
+            $this->cached = true;
             $this->response = null;
             $this->chartData = Cache::get($cacheKey);
-        }
-        // Otherwise, store it
-        else {
+        } else {
+            // Otherwise, store it if it's valid
+            $this->cached = false;
             $this->response = Http::withToken($this->apiToken)->post($endpointUrl, $postData);
             $this->chartData = $this->response->ok() ? collect($this->response->json()) : null;
-            Cache::put($cacheKey, $this->chartData, config('immanuel.cache_lifetime'));
+
+            if ($this->chartData !== null) {
+                Cache::put($cacheKey, $this->chartData, config('immanuel.cache_lifetime'));
+            }
         }
     }
 }
