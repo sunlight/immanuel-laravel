@@ -254,8 +254,8 @@ class Immanuel
     }
 
     /**
-     * Here's where the API magic happens via Laravel's Http facade.
-     * Upon success, the API's JSON response is stored as a standard Laravel collection.
+     * Look for a cached response if there is one & if cache is enabled,
+     * otherwise fall back on contacting the API.
      *
      */
     protected function getChartData(array $postData)
@@ -264,24 +264,51 @@ class Immanuel
         $postData = array_filter($postData);
         $endpointUrl = Str::of($this->apiUrl)->finish('/').'chart/'.implode('/', $this->chartMethods);
 
-        // Generate cache key unique to URL & data
-        ksort($postData);
-        $cacheKey = base64_encode(json_encode($postData).$endpointUrl);
+        if (config('immanuel.cache') == 1) {
+            // Generate cache key unique to URL & data
+            ksort($postData);
+            $cacheKey = base64_encode(json_encode($postData).$endpointUrl);
 
-        if (Cache::has($cacheKey)) {
-            // If it exists already, return it
-            $this->cached = true;
-            $this->response = null;
-            $this->chartData = Cache::get($cacheKey);
-        } else {
-            // Otherwise, store it if it's valid
-            $this->cached = false;
-            $this->response = Http::withToken($this->apiToken)->post($endpointUrl, $postData);
-            $this->chartData = $this->response->ok() ? collect($this->response->json()) : null;
+            if (Cache::has($cacheKey)) {
+                // If it exists already, return it
+                $this->getChartDataFromCache($cacheKey);
+            } else {
+                // Otherwise, store it if it's valid
+                $this->getChartDataFromAPI($endpointUrl, $postData);
 
-            if ($this->chartData !== null) {
-                Cache::put($cacheKey, $this->chartData, config('immanuel.cache_lifetime'));
+                if ($this->chartData !== null) {
+                    if (config('immanuel.cache_lifetime') > 0) {
+                        Cache::put($cacheKey, $this->chartData, config('immanuel.cache_lifetime'));
+                    } else {
+                        Cache::forever($cacheKey, $this->chartData);
+                    }
+                }
             }
+        } else {
+            $this->getChartDataFromAPI($endpointUrl, $postData);
         }
+    }
+
+    /**
+     * API magic via Laravel's Http facade. Upon success, the JSON response is
+     * stored as a standard Laravel collection.
+     *
+     */
+    protected function getChartDataFromAPI($endpointUrl, $postData)
+    {
+        $this->cached = false;
+        $this->response = Http::withToken($this->apiToken)->post($endpointUrl, $postData);
+        $this->chartData = $this->response->ok() ? collect($this->response->json()) : null;
+    }
+
+    /**
+     * If we have already cached it, retrieve the data here.
+     *
+     */
+    protected function getChartDataFromCache($cacheKey)
+    {
+        $this->cached = true;
+        $this->response = null;
+        $this->chartData = Cache::get($cacheKey);
     }
 }
