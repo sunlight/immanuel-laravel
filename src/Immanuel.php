@@ -243,14 +243,12 @@ class Immanuel
     {
         if (isset($this->chartMethods['secondary_type'])) {
             throw new \Exception('Only two non-transit charts may be returned.');
-        }
-        elseif (!isset($this->chartMethods['type'])) {
+        } elseif (!isset($this->chartMethods['type'])) {
             if ($type === 'synastry' || $type === 'transits') {
                 throw new \Exception('No primary chart defined.');
             }
             $this->chartMethods['type'] = $type;
-        }
-        else {
+        } else {
             $this->chartMethods['secondary_type'] = $type;
         }
     }
