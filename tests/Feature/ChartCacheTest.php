@@ -25,7 +25,7 @@ class ChartCacheTest extends TestCase
     {
         Cache::spy();
 
-        Config::set('immanuel.cache', 0);
+        Config::set('immanuel.use_cache', 'FALSE');
 
         $immanuel = new RiftLab\Immanuel\Immanuel();
         $immanuel->create($this->options)->addNatalChart()->get();

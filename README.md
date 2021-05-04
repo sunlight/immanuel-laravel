@@ -14,7 +14,8 @@ By default, the Immanuel package reads the following keys from your `.env` file:
 
 * `IMMANUEL_API_URL`: the URL of the API, defaulting to `https://api.immanuel.app` - you should only need to change this if you're hosting your own version of the project.
 * `IMMANUEL_API_TOKEN`: the API token you received when signing up at https://immanuel.app/
-* `IMMANUEL_CACHE_LIFETIME`: the length of time in seconds that the requested chart data will be cached, defaulting to 180 days. Identical requests will always produce identical results, but the cache length should not be indefinite in the event of updates to the API itself.
+* `IMMANUEL_USE_CACHE`: Since identical requests will produce identical responses, data received from the API is cached by default. Set this to a string literal of either `'true'` or `'false'` to switch caching on & off.
+* `IMMANUEL_CACHE_LIFETIME`: the length of time in seconds that chart data will be cached, defaulting to 180 days. For an indefinite lifetime, set to zero.
 
 If you need to store any extra data related to this package, or store any of the above details directly in your application, you can publish the config file using the following:
 

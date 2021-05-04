@@ -32,11 +32,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | Since identical requests will produce identical responses, data received
-    | from the API is cached by default. To stop caching, set this to zero.
+    | from the API is cached by default. To stop caching, set this to 'false'.
     |
     */
 
-    'cache' => env('IMMANUEL_CACHE', 1),
+    'use_cache' => env('IMMANUEL_USE_CACHE', 'true'),
 
     /*
     |--------------------------------------------------------------------------

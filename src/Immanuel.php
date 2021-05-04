@@ -11,6 +11,8 @@ class Immanuel
 {
     protected $apiUrl;
     protected $apiToken;
+    protected $useCache;
+    protected $cacheLifetime;
     protected $chartMethods;
     protected $options;
     protected $arguments;
@@ -26,6 +28,8 @@ class Immanuel
     {
         $this->apiUrl = config('immanuel.api_url');
         $this->apiToken = config('immanuel.api_token');
+        $this->useCache = strtolower(config('immanuel.use_cache')) === 'true';
+        $this->cacheLifetime = config('immanuel.cache_lifetime');
         $this->chartMethods = [];
         $this->arguments = [];
 
@@ -264,7 +268,7 @@ class Immanuel
         $postData = array_filter($postData);
         $endpointUrl = Str::of($this->apiUrl)->finish('/').'chart/'.implode('/', $this->chartMethods);
 
-        if (config('immanuel.cache') == 1) {
+        if ($this->useCache) {
             // Generate cache key unique to URL & data
             ksort($postData);
             $cacheKey = base64_encode(json_encode($postData).$endpointUrl);
@@ -277,8 +281,8 @@ class Immanuel
                 $this->getChartDataFromAPI($endpointUrl, $postData);
 
                 if ($this->chartData !== null) {
-                    if (config('immanuel.cache_lifetime') > 0) {
-                        Cache::put($cacheKey, $this->chartData, config('immanuel.cache_lifetime'));
+                    if ($this->cacheLifetime > 0) {
+                        Cache::put($cacheKey, $this->chartData, $this->cacheLifetime);
                     } else {
                         Cache::forever($cacheKey, $this->chartData);
                     }
